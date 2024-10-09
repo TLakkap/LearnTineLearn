@@ -2,16 +2,29 @@ package com.tine.learnTineLearn;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/spring")
 public class Spring{
 
-    /*@GetMapping("/spring")
-    public String hello() {
-        System.out.println("Here");
-        return "Welcome to test your knowledge on Spring Framework!";
-    }*/
+    ArrayList<String> infos = new ArrayList<>();
+
+    public void setInfos() {
+        infos.add("Important information 1");
+    }
+
+    @GetMapping("/")
+    public Response hello() {
+        setInfos();
+        String info = infos.get(0);
+        System.out.println(info);
+        return new Response(info);
+    }
 
     @PostMapping("/answer")
     public Response handleData(@RequestBody DataPayload data) {

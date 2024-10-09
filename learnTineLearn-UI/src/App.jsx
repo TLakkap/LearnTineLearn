@@ -3,19 +3,21 @@ import { useState } from 'react'
 //import viteLogo from '/vite.svg'
 import './App.css'
 
+const url = 'http://localhost:8080/api/spring/'
+
 function App() {
-  const [name, setName] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [info, setInfo] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Lähetä pyyntö Spring Boot -backendille
-    fetch('http://localhost:8080/api/spring/answer', {
+    fetch(url+'answer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ answer: name }),
+      body: JSON.stringify({ answer: feedback }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -26,19 +28,34 @@ function App() {
       });
   };
 
+  const handleClick = () => {
+    console.log("clicked")
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data:",data.message)
+        setInfo(data.message)
+      })
+      .catch((error) => {
+        console.error('Virhe:', error);
+      })
+  }
+
   return (
     <div>
-      <h1>Lähetä tietoa Spring Bootille</h1>
+      <button onClick={() => handleClick()}>Learn Spring</button>
+      <h2>{info}</h2>
+      <h4>Send feedback</h4>
       <form onSubmit={handleSubmit}>
         <label>
-          Nimi:
+          Feedback:
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
           />
         </label>
-        <button type="submit">Lähetä</button>
+        <button type="submit">Send</button>
       </form>
     </div>
   );
