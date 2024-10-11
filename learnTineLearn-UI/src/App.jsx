@@ -6,18 +6,18 @@ import './App.css'
 const url = 'http://localhost:8080/api/spring/'
 
 function App() {
-  const [feedback, setFeedback] = useState('');
+  const [newInfo, setNewInfo] = useState('');
   const [info, setInfo] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(url+'answer', {
+    fetch(url+'new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ answer: feedback }),
+      body: JSON.stringify({ info: newInfo }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -45,17 +45,17 @@ function App() {
     <div>
       <button onClick={() => handleClick()}>Learn Spring</button>
       <h2>{info}</h2>
-      <h4>Send feedback</h4>
+      <h4>Save new</h4>
       <form onSubmit={handleSubmit}>
         <label>
-          Feedback:
+          New:
           <input
             type="text"
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
+            value={newInfo}
+            onChange={(e) => setNewInfo(e.target.value)}
           />
         </label>
-        <button type="submit">Send</button>
+        <button type="submit">Save</button>
       </form>
     </div>
   );

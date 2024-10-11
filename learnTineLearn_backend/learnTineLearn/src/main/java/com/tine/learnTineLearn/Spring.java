@@ -1,5 +1,6 @@
 package com.tine.learnTineLearn;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -9,36 +10,45 @@ import java.util.*;
 @RequestMapping("/api/spring")
 public class Spring{
 
+    @Autowired
+    InfoRepository infoRepository;
+
     List<String> infos = List.of(
             "Benefits of using Spring: Lightweight, IoC, AOP, IoC container, MVC framework, transaction management, exception handling.",
             "IoC = Inversion of Control. Spring container takes care of wiring dependencies of various objects.",
-            "AOP = Aspect-Oriened Programming. Spring supports AOP to separate business logic from system services.",
-            "IoC container manages Spring Bean life cycle and project-spesific configurations."
+            "AOP = Aspect-Oriented Programming. Spring supports AOP to separate business logic from system services.",
+            "IoC container manages Spring Bean life cycle and project-specific configurations."
     );
 
     @GetMapping("/")
     public Response hello() {
+        Iterable<Info> infos2 = infoRepository.findAll();
+        for (Info info : infos2) {
+            System.out.println(info.getInfo());
+        }
         String info = infos.get((int) (Math.random() * infos.size()));
         System.out.println(info);
         return new Response(info);
     }
 
-    @PostMapping("/answer")
-    public Response handleData(@RequestBody DataPayload data) {
-        System.out.println("Received answer: " + data.getAnswer());
+    @PostMapping("/new")
+    public Response handleData(@RequestBody Info info) {
+        System.out.println("Received new info: " + info.getInfo());
 
-        return new Response("Thank you for answering!");
+        infoRepository.save(info);
+
+        return new Response("New info saved!");
     }
 
     public static class DataPayload {
-        private String answer;
+        private String info;
 
-        public String getAnswer() {
-            return answer;
+        public String getInfo() {
+            return info;
         }
 
-        public void setAnswer(String answer) {
-            this.answer = answer;
+        public void setInfo(String info) {
+            this.info = info;
         }
     }
 
