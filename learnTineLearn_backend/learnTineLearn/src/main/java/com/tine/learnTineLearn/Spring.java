@@ -13,22 +13,31 @@ public class Spring{
     @Autowired
     InfoRepository infoRepository;
 
-    List<String> infos = List.of(
+    /*List<String> infos = List.of(
             "Benefits of using Spring: Lightweight, IoC, AOP, IoC container, MVC framework, transaction management, exception handling.",
             "IoC = Inversion of Control. Spring container takes care of wiring dependencies of various objects.",
             "AOP = Aspect-Oriented Programming. Spring supports AOP to separate business logic from system services.",
             "IoC container manages Spring Bean life cycle and project-specific configurations."
-    );
+    );*/
 
     @GetMapping("/")
-    public Response hello() {
-        Iterable<Info> infos2 = infoRepository.findAll();
-        for (Info info : infos2) {
+    public Response sendInfo() {
+        List<Info> infos = new ArrayList<>();
+        infoRepository.findAll().forEach(infos::add);
+
+        if (infos.isEmpty()) {
+            return new Response("No saved infos");
+        }
+
+        for (Info info : infos) {
             System.out.println(info.getInfo());
         }
-        String info = infos.get((int) (Math.random() * infos.size()));
-        System.out.println(info);
-        return new Response(info);
+
+        Random random = new Random();
+        Info info = infos.get(random.nextInt(infos.size()));
+        System.out.println(info.getInfo());
+
+        return new Response(info.getInfo());
     }
 
     @PostMapping("/new")
