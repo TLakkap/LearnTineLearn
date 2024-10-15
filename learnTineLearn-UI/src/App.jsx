@@ -5,6 +5,7 @@ const url = 'http://localhost:8080/api/spring/'
 function App() {
   const [newInfo, setNewInfo] = useState('')
   const [info, setInfo] = useState('')
+  const [infoId, setInfoId] = useState()
   const [message, setMessage] = useState(null)
 
   const handleSubmit = (e) => {
@@ -33,18 +34,28 @@ function App() {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data:",data.message)
-        setInfo(data.message)
+        console.log("data:",data.info)
+        setInfo(data.info)
+        setInfoId(data.id)
       })
       .catch((error) => {
         console.error('Virhe:', error);
       })
   }
 
+  const handleDelete = () => {
+    console.log("delete:", infoId)
+    fetch(url+infoId, {
+      method: 'DELETE'
+    })
+
+  }
+
   return (
     <div>
       <button onClick={() => handleClick()}>Show new info</button>
       <h2>{info}</h2>
+      <button onClick={() => handleDelete()}>Delete</button>
       <h4>Save new</h4>
       <form onSubmit={handleSubmit}>
         <label>

@@ -13,31 +13,27 @@ public class Spring{
     @Autowired
     InfoRepository infoRepository;
 
-    /*List<String> infos = List.of(
-            "Benefits of using Spring: Lightweight, IoC, AOP, IoC container, MVC framework, transaction management, exception handling.",
-            "IoC = Inversion of Control. Spring container takes care of wiring dependencies of various objects.",
-            "AOP = Aspect-Oriented Programming. Spring supports AOP to separate business logic from system services.",
-            "IoC container manages Spring Bean life cycle and project-specific configurations."
-    );*/
-
     @GetMapping("/")
-    public Response sendInfo() {
+    public Info sendInfo() {
         List<Info> infos = new ArrayList<>();
+        //Get infos from db
         infoRepository.findAll().forEach(infos::add);
 
         if (infos.isEmpty()) {
-            return new Response("No saved infos");
+            return new Info("No saved infos");
         }
 
         for (Info info : infos) {
             System.out.println(info.getInfo());
         }
 
+        //Send random info to UI
         Random random = new Random();
         Info info = infos.get(random.nextInt(infos.size()));
         System.out.println(info.getInfo());
+        System.out.println(info.getId());
 
-        return new Response(info.getInfo());
+        return info;
     }
 
     @PostMapping("/new")
@@ -47,6 +43,14 @@ public class Spring{
         infoRepository.save(info);
 
         return new Response("New info saved!");
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteData(@PathVariable("id") Long id) {
+        Optional<Info> existingInfo = infoRepository.findById(id);
+        if(existingInfo.isPresent()) {
+            infoRepository.delete(existingInfo.get());
+        }
     }
 
     public static class DataPayload {

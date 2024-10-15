@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Info {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     private String info;
 
@@ -18,7 +18,7 @@ public class Info {
         this.info = info;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
