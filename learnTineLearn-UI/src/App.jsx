@@ -18,10 +18,13 @@ function App() {
       },
       body: JSON.stringify({ info: newInfo }),
     })
-      .then((response) => response.json())
+      /*.then((response) => response.json())
       .then((data) => {
-        console.log('Vastaus backendilta:', data);
-        setMessage(data.message)
+        console.log('Vastaus backendilta:', data);*/
+      .then((response) => {
+        if(response.status === 201) setMessage('Created')
+        else setMessage('Failed to create info')    
+        //setMessage(message)
         setNewInfo('')
       })
       .catch((error) => {
@@ -48,7 +51,13 @@ function App() {
     fetch(url+infoId, {
       method: 'DELETE'
     })
-
+    .then((response) => {
+      if(response.status === 200) console.log('Deleted')
+      else console.log('Failed to delete info')
+      })
+    .catch((error) => {
+      console.error('Virhe:', error)
+    })
   }
 
   return (

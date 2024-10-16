@@ -1,6 +1,8 @@
 package com.tine.learnTineLearn;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -37,20 +39,22 @@ public class Spring{
     }
 
     @PostMapping("/new")
-    public Response handleData(@RequestBody Info info) {
+    public ResponseEntity<String> handleData(@RequestBody Info info) {
         System.out.println("Received new info: " + info.getInfo());
 
         infoRepository.save(info);
 
-        return new Response("New info saved!");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteData(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteData(@PathVariable("id") Long id) {
         Optional<Info> existingInfo = infoRepository.findById(id);
         if(existingInfo.isPresent()) {
             infoRepository.delete(existingInfo.get());
+            return ResponseEntity.ok().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     public static class DataPayload {
@@ -65,7 +69,7 @@ public class Spring{
         }
     }
 
-    public static class Response {
+    /*public static class Response {
         private String message;
 
         public Response(String message) {
@@ -79,6 +83,6 @@ public class Spring{
         public void setMessage(String message) {
             this.message = message;
         }
-    }
+    }*/
 
 }
