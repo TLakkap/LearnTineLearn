@@ -46,6 +46,26 @@ function App() {
       })
   }
 
+  const handleUpdate = () => {
+    console.log("update:", infoId, info)
+    fetch(url+infoId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: 'updatedTextHere',
+    })
+    .then((response) => {
+      console.log(response)
+      if(response.status === 200) setMessage('Updated')
+      else setMessage('Failed to update info')    
+      //setMessage(message)
+    })
+    .catch((error) => {
+      console.error('Virhe:', error);
+    })
+  }
+
   const handleDelete = () => {
     console.log("delete:", infoId)
     fetch(url+infoId, {
@@ -64,6 +84,7 @@ function App() {
     <div>
       <button onClick={() => handleClick()}>Show new info</button>
       <h2>{info}</h2>
+      <button onClick={() => handleUpdate()}>Update</button>
       <button onClick={() => handleDelete()}>Delete</button>
       <h4>Save new</h4>
       <form onSubmit={handleSubmit}>

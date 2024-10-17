@@ -39,12 +39,29 @@ public class Spring{
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> handleData(@RequestBody Info info) {
+    public ResponseEntity<Info> handleData(@RequestBody Info info) {
         System.out.println("Received new info: " + info.getInfo());
 
-        infoRepository.save(info);
+        Info savedInfo = infoRepository.save(info);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(savedInfo, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value="/{id}", produces = "application/json")
+    public ResponseEntity<Info> update(@PathVariable("id") Long id, @RequestBody String info){
+        Optional<Info> existingInfo = infoRepository.findById(id);
+
+        if(existingInfo.isPresent()){
+            Info updatedInfo = existingInfo.get();
+
+            //set updated info to object retrieved from db
+            updatedInfo.setInfo(info);
+            //save updates to db
+            updatedInfo = infoRepository.save(updatedInfo);
+
+            return new ResponseEntity<>(updatedInfo, HttpStatus.OK);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
