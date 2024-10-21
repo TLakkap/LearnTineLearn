@@ -14,7 +14,7 @@ import java.util.*;
 public class Spring{
 
     @Autowired
-    InfoRepository infoRepository;
+    private InfoRepository infoRepository;
 
     @GetMapping("/")
     public Info sendInfo() {
