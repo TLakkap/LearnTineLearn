@@ -1,4 +1,4 @@
-package model;
+package com.tine.learnTineLearn.model;
 
 import jakarta.persistence.*;
 
