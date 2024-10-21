@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.tine.learnTineLearn.model.Info;
+import com.tine.learnTineLearn.repository.InfoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

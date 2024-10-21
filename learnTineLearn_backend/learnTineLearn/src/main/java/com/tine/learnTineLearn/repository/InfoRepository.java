@@ -1,4 +1,4 @@
-package com.tine.learnTineLearn;
+package com.tine.learnTineLearn.repository;
 
 import com.tine.learnTineLearn.model.Info;
 import org.springframework.data.repository.CrudRepository;
