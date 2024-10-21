@@ -1,5 +1,6 @@
 package com.tine.learnTineLearn;
 
+import model.Info;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
