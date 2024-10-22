@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.tine.learnTineLearn.controller.SpringController;
 import com.tine.learnTineLearn.model.Info;
 import com.tine.learnTineLearn.repository.InfoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class SpringTest {
     private InfoRepository infoRepository;
 
     @InjectMocks
-    private Spring spring;
+    private SpringController spring;
 
     @BeforeEach
     void setUp() {

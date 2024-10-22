@@ -1,4 +1,4 @@
-package com.tine.learnTineLearn;
+package com.tine.learnTineLearn.controller;
 
 import com.tine.learnTineLearn.model.Info;
 import com.tine.learnTineLearn.repository.InfoRepository;
@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/spring")
-public class Spring{
+public class SpringController {
 
     @Autowired
     private InfoRepository infoRepository;
@@ -87,21 +86,5 @@ public class Spring{
             this.info = info;
         }
     }
-
-    /*public static class Response {
-        private String message;
-
-        public Response(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-    }*/
 
 }
