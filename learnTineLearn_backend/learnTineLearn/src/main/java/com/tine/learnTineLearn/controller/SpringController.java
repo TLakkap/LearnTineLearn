@@ -1,7 +1,8 @@
 package com.tine.learnTineLearn.controller;
 
 import com.tine.learnTineLearn.model.Info;
-import com.tine.learnTineLearn.repository.InfoRepository;
+import com.tine.learnTineLearn.service.InfoService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +14,26 @@ import java.util.*;
 @RequestMapping("/api/spring")
 public class SpringController {
 
+    private final InfoService infoService;
+
     @Autowired
-    private InfoRepository infoRepository;
+    public SpringController(InfoService infoService) {
+        this.infoService = infoService;
+    }
 
     @GetMapping("/")
-    public Info sendInfo() {
-        List<Info> infos = new ArrayList<>();
-        //Get infos from db
-        infoRepository.findAll().forEach(infos::add);
+    public Info sendInfo(Long courseId) {
+        ArrayList<Info> infos = infoService.getInfosByCourseId(courseId);
 
         if (infos.isEmpty()) {
-            return new Info("No saved infos");
+            return null;
         }
 
         for (Info info : infos) {
             System.out.println(info.getInfo());
         }
 
-        //Send random info to UI
-        Random random = new Random();
-        Info info = infos.get(random.nextInt(infos.size()));
-        System.out.println(info.getInfo());
-        System.out.println(info.getId());
+        Info info = infoService.getRandomInfoFromList(infos);
 
         return info;
     }
@@ -43,48 +42,44 @@ public class SpringController {
     public ResponseEntity<Info> handleData(@RequestBody Info info) {
         System.out.println("Received new info: " + info.getInfo());
 
-        Info savedInfo = infoRepository.save(info);
+        Info savedInfo = infoService.addNewInfo(info);
 
         return new ResponseEntity<>(savedInfo, HttpStatus.CREATED);
     }
 
     @PutMapping(value="/{id}", produces = "application/json")
-    public ResponseEntity<Info> update(@PathVariable("id") Long id, @RequestBody String info){
-        Optional<Info> existingInfo = infoRepository.findById(id);
-
-        if(existingInfo.isPresent()){
-            Info updatedInfo = existingInfo.get();
-
-            //set updated info to object retrieved from db
-            updatedInfo.setInfo(info);
-            //save updates to db
-            updatedInfo = infoRepository.save(updatedInfo);
-
-            return new ResponseEntity<>(updatedInfo, HttpStatus.OK);
+    public ResponseEntity<Info> update(@PathVariable("id") Long id, @RequestBody Info info){
+        // Make sure path id and info id are the same
+        if (!id.equals(info.getId())) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.notFound().build();
+
+        try {
+            Info updatedInfo = infoService.updateInfo(info);
+            return new ResponseEntity<>(updatedInfo, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            System.out.println("Info not found when trying to update it: " + e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println("Caught exception when trying to update info: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteData(@PathVariable("id") Long id) {
-        Optional<Info> existingInfo = infoRepository.findById(id);
-        if(existingInfo.isPresent()) {
-            infoRepository.delete(existingInfo.get());
+        try {
+            infoService.deleteInfo(id);
             return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    public static class DataPayload {
-        private String info;
-
-        public String getInfo() {
-            return info;
+        } catch (EntityNotFoundException e) {
+            System.out.println("Info not found when trying to delete it: " + e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println("Caught exception when trying to delete info: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
-        public void setInfo(String info) {
-            this.info = info;
-        }
     }
 
 }

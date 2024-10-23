@@ -31,19 +31,19 @@ class SpringTest {
     }
 
     @Test
-    void whenNoInfosInDb_thenCorrectMessageIsReturned() {
+    void whenNoInfosInDb_thenNullIsReturned() {
         when(infoRepository.findAll()).thenReturn(new ArrayList<>());
 
-        Info result = spring.sendInfo();
+        Info result = spring.sendInfo(0L);
 
-        assertEquals("No saved infos", result.getInfo());
+        assertEquals(null, result);
     }
 
     @Test
     void whenInfosInDb_thenOneInfoIsReturned() {
         // Create test infos
-        Info info1 = new Info("Info 1");
-        Info info2 = new Info("Info 2");
+        Info info1 = new Info(0L, "Info 1");
+        Info info2 = new Info(0L, "Info 2");
         List<Info> infos = Arrays.asList(info1, info2);
 
         // Mock what db returns
@@ -53,9 +53,9 @@ class SpringTest {
         Random randomMock = mock(Random.class);
         when(randomMock.nextInt(anyInt())).thenReturn(0); // Return first element from list
 
-        Info result = spring.sendInfo();
+        Info result = spring.sendInfo(0L);
 
-        assertEquals("Info 1", result.getInfo());
+        assertEquals(info1.getInfo(), result.getInfo());
     }
 }
 

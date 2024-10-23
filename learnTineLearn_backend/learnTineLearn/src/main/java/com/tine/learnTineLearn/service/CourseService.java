@@ -10,8 +10,12 @@ import java.util.ArrayList;
 @Service
 public class CourseService {
 
+    private final CourseRepository courseRepository;
+
     @Autowired
-    private CourseRepository courseRepository;
+    public CourseService(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
 
     public ArrayList getCourses(){
         ArrayList<Course> courses = new ArrayList<>();
