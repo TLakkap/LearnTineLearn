@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/spring")
-public class SpringController {
+@RequestMapping("/api/{courseId}")
+public class InfoController {
 
     private final InfoService infoService;
 
     @Autowired
-    public SpringController(InfoService infoService) {
+    public InfoController(InfoService infoService) {
         this.infoService = infoService;
     }
 
     @GetMapping("/")
-    public Info sendInfo(Long courseId) {
+    public ResponseEntity<Info> sendInfo(@PathVariable("courseId") Long courseId) {
         ArrayList<Info> infos = infoService.getInfosByCourseId(courseId);
 
         if (infos.isEmpty()) {
-            return null;
+            return ResponseEntity.notFound().build();
         }
 
         for (Info info : infos) {
@@ -35,7 +35,7 @@ public class SpringController {
 
         Info info = infoService.getRandomInfoFromList(infos);
 
-        return info;
+        return ResponseEntity.ok(info);
     }
 
     @PostMapping("/new")

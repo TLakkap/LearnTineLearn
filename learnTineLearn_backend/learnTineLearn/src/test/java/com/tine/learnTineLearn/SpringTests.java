@@ -4,26 +4,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
-import com.tine.learnTineLearn.controller.SpringController;
+import com.tine.learnTineLearn.controller.InfoController;
 import com.tine.learnTineLearn.model.Info;
-import com.tine.learnTineLearn.repository.InfoRepository;
+import com.tine.learnTineLearn.service.InfoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
 class SpringTest {
 
     @Mock
-    private InfoRepository infoRepository;
+    private InfoService infoService;
 
     @InjectMocks
-    private SpringController spring;
+    private InfoController infoController;
 
     @BeforeEach
     void setUp() {
@@ -32,30 +30,31 @@ class SpringTest {
 
     @Test
     void whenNoInfosInDb_thenNullIsReturned() {
-        when(infoRepository.findAll()).thenReturn(new ArrayList<>());
+        Long courseId = 0L;
+        when(infoService.getInfosByCourseId(courseId)).thenReturn(new ArrayList<>());
 
-        Info result = spring.sendInfo(0L);
+        ResponseEntity<Info> response = infoController.sendInfo(courseId);
 
-        assertEquals(null, result);
+        assertEquals(ResponseEntity.notFound().build(), response);
+        verify(infoService, times(1)).getInfosByCourseId(courseId);
     }
 
     @Test
     void whenInfosInDb_thenOneInfoIsReturned() {
         // Create test infos
-        Info info1 = new Info(0L, "Info 1");
-        Info info2 = new Info(0L, "Info 2");
-        List<Info> infos = Arrays.asList(info1, info2);
+        Long courseId = 0L;
+        Info mockInfo = new Info(courseId, "Info 1");
+        ArrayList<Info> infos = new ArrayList<>();
+        infos.add(mockInfo);
 
-        // Mock what db returns
-        when(infoRepository.findAll()).thenReturn(infos);
+        when(infoService.getInfosByCourseId(courseId)).thenReturn(infos);
+        when(infoService.getRandomInfoFromList(infos)).thenReturn(mockInfo);
 
-        // Mock random
-        Random randomMock = mock(Random.class);
-        when(randomMock.nextInt(anyInt())).thenReturn(0); // Return first element from list
+        ResponseEntity<Info> response = infoController.sendInfo(courseId);
 
-        Info result = spring.sendInfo(0L);
-
-        assertEquals(info1.getInfo(), result.getInfo());
+        assertEquals(ResponseEntity.ok(mockInfo), response);
+        verify(infoService, times(1)).getInfosByCourseId(courseId);
+        verify(infoService, times(1)).getRandomInfoFromList(infos);
     }
 }
 
