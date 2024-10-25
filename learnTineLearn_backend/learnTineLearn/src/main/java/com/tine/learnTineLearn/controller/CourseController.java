@@ -21,8 +21,8 @@ public class CourseController {
     }
 
     @GetMapping("/")
-    public ArrayList hello() {
-        System.out.println("Hello");
+    public ArrayList getAllCourses() {
+        System.out.println("Get all courses");
 
         ArrayList<Course> courses = courseService.getCourses();
 

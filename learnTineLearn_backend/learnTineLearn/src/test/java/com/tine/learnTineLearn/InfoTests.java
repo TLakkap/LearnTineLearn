@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-class SpringTest {
+class InfoTest {
 
     @Mock
     private InfoService infoService;
