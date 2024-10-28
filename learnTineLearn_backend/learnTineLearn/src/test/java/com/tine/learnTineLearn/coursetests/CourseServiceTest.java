@@ -1,4 +1,4 @@
-package com.tine.learnTineLearn;
+package com.tine.learnTineLearn.coursetests;
 
 import com.tine.learnTineLearn.model.Course;
 import com.tine.learnTineLearn.repository.CourseRepository;
