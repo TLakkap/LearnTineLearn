@@ -1,5 +1,6 @@
 package com.tine.learnTineLearn.controller;
 
+import com.tine.learnTineLearn.CustomLogger;
 import com.tine.learnTineLearn.model.Course;
 import com.tine.learnTineLearn.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,18 @@ import java.util.ArrayList;
 @RequestMapping("/api")
 public class CourseController {
 
+    private final CustomLogger customLogger;
     private final CourseService courseService;
 
     @Autowired
     public CourseController(CourseService courseService){
+        this.customLogger = new CustomLogger();
         this.courseService = courseService;
     }
 
     @GetMapping("/")
     public ArrayList getAllCourses() {
-        System.out.println("Get all courses");
+        customLogger.debug("Get all courses");
 
         ArrayList<Course> courses = courseService.getCourses();
 
@@ -31,7 +34,7 @@ public class CourseController {
 
     @PostMapping("/addNew")
     public ResponseEntity<Course> handleData(@RequestBody Course course) {
-        System.out.println("Saving new course: " + course.getCourseName());
+        customLogger.debug("Saving new course: " + course.getCourseName());
 
         Course savedCourse = courseService.addNewCourse(course);
 
