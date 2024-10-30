@@ -1,5 +1,6 @@
 package com.tine.learnTineLearn.service;
 
+import com.tine.learnTineLearn.CustomLogger;
 import com.tine.learnTineLearn.model.Info;
 import com.tine.learnTineLearn.repository.InfoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,23 +14,25 @@ import java.util.Random;
 @Service
 public class InfoService {
 
+    private final CustomLogger customLogger;
     private final InfoRepository infoRepository;
 
     @Autowired
     public InfoService(InfoRepository infoRepository) {
+        this.customLogger = new CustomLogger();
         this.infoRepository = infoRepository;
     }
 
-    public ArrayList getAllInfos() {
-        ArrayList<Info> allInfos = new ArrayList<Info>();
+    public ArrayList<Info> getAllInfos() {
+        ArrayList<Info> allInfos = new ArrayList<>();
         //Get all infos from db
         infoRepository.findAll().forEach(allInfos::add);
 
         return allInfos;
     }
 
-    public ArrayList getInfosByCourseId(Long courseId) {
-        ArrayList<Info> infosInCourse = new ArrayList<Info>();
+    public ArrayList<Info> getInfosByCourseId(Long courseId) {
+        ArrayList<Info> infosInCourse = new ArrayList<>();
         //get infos for course from db
         infoRepository.findByCourseId(courseId);
 
@@ -39,8 +42,7 @@ public class InfoService {
     public Info getRandomInfoFromList(ArrayList<Info> infoList) {
         Random random = new Random();
         Info info = infoList.get(random.nextInt(infoList.size()));
-        System.out.println(info.getInfo());
-        System.out.println(info.getId());
+        customLogger.debug("Got random info: {}, with id: {}", info.getInfo(), info.getId().toString());
         return info;
     }
 
@@ -68,7 +70,7 @@ public class InfoService {
 
     public void deleteInfo(Long id) {
         Optional<Info> existingInfo = infoRepository.findById(id);
-        if(!existingInfo.isPresent()) {
+        if(existingInfo.isEmpty()) {
             throw new EntityNotFoundException("Info with id " + id + " not found.");
         }
 

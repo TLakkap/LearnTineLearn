@@ -14,6 +14,10 @@ public class CustomLogger {
         logger.debug(message);
     }
 
+    public void debug(String message, Object... args) {
+        logger.debug(message, args);
+    }
+
     public void error(String message) {
         logger.error(message);
     }

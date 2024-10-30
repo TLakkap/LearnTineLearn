@@ -1,5 +1,6 @@
 package com.tine.learnTineLearn.controller;
 
+import com.tine.learnTineLearn.CustomLogger;
 import com.tine.learnTineLearn.model.Info;
 import com.tine.learnTineLearn.service.InfoService;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,10 +15,12 @@ import java.util.*;
 @RequestMapping("/api/{courseId}")
 public class InfoController {
 
+    private final CustomLogger customLogger;
     private final InfoService infoService;
 
     @Autowired
     public InfoController(InfoService infoService) {
+        this.customLogger = new CustomLogger();
         this.infoService = infoService;
     }
 
@@ -30,7 +33,7 @@ public class InfoController {
         }
 
         for (Info info : infos) {
-            System.out.println(info.getInfo());
+            customLogger.debug(info.getInfo());
         }
 
         Info info = infoService.getRandomInfoFromList(infos);
@@ -40,7 +43,7 @@ public class InfoController {
 
     @PostMapping("/new")
     public ResponseEntity<Info> handleData(@RequestBody Info info) {
-        System.out.println("Received new info: " + info.getInfo());
+        customLogger.info("Received new info: " + info.getInfo());
 
         Info savedInfo = infoService.addNewInfo(info);
 
@@ -58,10 +61,10 @@ public class InfoController {
             Info updatedInfo = infoService.updateInfo(info);
             return new ResponseEntity<>(updatedInfo, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            System.out.println("Info not found when trying to update it: " + e.getMessage());
+            customLogger.error("Info not found when trying to update it: " + e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            System.out.println("Caught exception when trying to update info: " + e.getMessage());
+            customLogger.error("Caught exception when trying to update info: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
@@ -73,10 +76,10 @@ public class InfoController {
             infoService.deleteInfo(id);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
-            System.out.println("Info not found when trying to delete it: " + e.getMessage());
+            customLogger.error("Info not found when trying to delete it: " + e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            System.out.println("Caught exception when trying to delete info: " + e.getMessage());
+            customLogger.error("Caught exception when trying to delete info: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
