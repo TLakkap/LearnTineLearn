@@ -17,7 +17,7 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public ArrayList getCourses(){
+    public ArrayList<Course> getCourses(){
         ArrayList<Course> courses = new ArrayList<>();
         //Get courses from db
         courseRepository.findAll().forEach(courses::add);

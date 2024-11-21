@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/courses")
 public class CourseController {
 
     private final CustomLogger customLogger;
@@ -23,16 +23,14 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping("/")
-    public ArrayList getAllCourses() {
+    @GetMapping
+    public ArrayList<Course> getAllCourses() {
         customLogger.debug("Get all courses");
 
-        ArrayList<Course> courses = courseService.getCourses();
-
-        return courses;
+        return courseService.getCourses();
     }
 
-    @PostMapping("/addNew")
+    @PostMapping("/new")
     public ResponseEntity<Course> handleData(@RequestBody Course course) {
         customLogger.debug("Saving new course: " + course.getCourseName());
 

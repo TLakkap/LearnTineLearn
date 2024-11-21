@@ -1,0 +1,9 @@
+package com.tine.learnTineLearn.repository;
+
+import com.tine.learnTineLearn.model.Topic;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TopicRepository extends CrudRepository<Topic, Long> {
+}

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -32,11 +33,10 @@ public class InfoService {
     }
 
     public ArrayList<Info> getInfosByCourseId(Long courseId) {
-        ArrayList<Info> infosInCourse = new ArrayList<>();
+        //infosInCourse = new ArrayList<>();
         //get infos for course from db
-        infoRepository.findByCourseId(courseId);
 
-        return infosInCourse;
+        return infoRepository.findByCourseId(courseId);
     }
 
     public Info getRandomInfoFromList(ArrayList<Info> infoList) {

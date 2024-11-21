@@ -1,14 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import CourseList from './components/CourseList'
 
-const url = 'http://localhost:8080/api/spring/'
+const url = '/api/'
 
 function App() {
-  const [newInfo, setNewInfo] = useState('')
+  const [courses, setCourses] = useState([])
+  /*const [newInfo, setNewInfo] = useState('')
   const [info, setInfo] = useState('')
   const [infoId, setInfoId] = useState()
-  const [message, setMessage] = useState(null)
+  const [message, setMessage] = useState(null)*/
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get(url + 'courses').then(response => {
+        setCourses(response.data)
+      })
+  }, [])
+
+  /*const handleSubmit = (e) => {
     e.preventDefault();
 
     fetch(url+'new', {
@@ -18,9 +29,6 @@ function App() {
       },
       body: JSON.stringify({ info: newInfo }),
     })
-      /*.then((response) => response.json())
-      .then((data) => {
-        console.log('Vastaus backendilta:', data);*/
       .then((response) => {
         if(response.status === 201) setMessage('Created')
         else setMessage('Failed to create info')    
@@ -34,12 +42,13 @@ function App() {
 
   const handleClick = () => {
     console.log("clicked")
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data:",data.info)
-        setInfo(data.info)
-        setInfoId(data.id)
+    axios.get(url + '52/')
+    //axios.get(url + '/courses')
+      .then(res => {
+        console.log("Axios response:", res)
+        console.log("Axios response data;", res.data)
+        setInfo(res.data.info)
+        setInfoId(res.data.id)
       })
       .catch((error) => {
         console.error('Virhe:', error);
@@ -78,11 +87,16 @@ function App() {
     .catch((error) => {
       console.error('Virhe:', error)
     })
-  }
+  }*/
+
+  const handleCourseClick = (courseName) => {
+    console.log('Valittu kurssi:', courseName);
+  };
 
   return (
     <div>
-      <button onClick={() => handleClick()}>Show new info</button>
+      <CourseList courses={courses} handleCourseClick={handleCourseClick} />
+      {/*<button onClick={() => handleClick()}>Show new info</button>
       <h2>{info}</h2>
       <button onClick={() => handleUpdate()}>Update</button>
       <button onClick={() => handleDelete()}>Delete</button>
@@ -98,7 +112,7 @@ function App() {
         </label>
         <button type="submit">Save</button>
         <div>{message}</div>
-      </form>
+      </form>*/}
     </div>
   );
 }
