@@ -40,8 +40,8 @@ public class CourseServiceTest {
         ArrayList<Course> courses = courseService.getCourses();
 
         assertEquals(2, courses.size());
-        assertEquals("Math 101", courses.get(0).getCourseName());
-        assertEquals("Science 101", courses.get(1).getCourseName());
+        assertEquals("Math 101", courses.get(0).getName());
+        assertEquals("Science 101", courses.get(1).getName());
 
         verify(courseRepository, times(1)).findAll();
     }
@@ -53,7 +53,7 @@ public class CourseServiceTest {
 
         Course savedCourse = courseService.addNewCourse(course);
 
-        assertEquals("History 101", savedCourse.getCourseName());
+        assertEquals("History 101", savedCourse.getName());
 
         verify(courseRepository, times(1)).save(course);
     }

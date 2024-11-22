@@ -11,23 +11,34 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String topic;
+    private Long courseId;
+
+    private String name;
 
     private Topic() {}
 
-    public Topic(String topic) {
-        this.topic = topic;
+    public Topic(Long courseId, String name) {
+        this.courseId = courseId;
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getTopic() {
-        return topic;
+    public Long getCourseId() {
+        return courseId;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

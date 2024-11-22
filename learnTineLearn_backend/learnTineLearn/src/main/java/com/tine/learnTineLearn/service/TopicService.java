@@ -16,10 +16,12 @@ public class TopicService {
         this.topicRepository = topicRepository;
     }
 
-    public ArrayList<Topic> getTopics(){
-        ArrayList<Topic> topics = new ArrayList<>();
+    public ArrayList<Topic> getTopicsByCourseId(Long courseId){
         //Get topics from db
-        topicRepository.findAll().forEach(topics::add);
-        return topics;
+        return new ArrayList<>(topicRepository.findByCourseId(courseId));
+    }
+
+    public Topic addNewTopic(Topic topic){
+        return topicRepository.save(topic);
     }
 }

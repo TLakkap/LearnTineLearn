@@ -32,7 +32,7 @@ public class CourseController {
 
     @PostMapping("/new")
     public ResponseEntity<Course> handleData(@RequestBody Course course) {
-        customLogger.debug("Saving new course: " + course.getCourseName());
+        customLogger.debug("Saving new course: " + course.getName());
 
         Course savedCourse = courseService.addNewCourse(course);
 

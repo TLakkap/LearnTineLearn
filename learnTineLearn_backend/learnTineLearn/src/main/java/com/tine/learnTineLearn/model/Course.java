@@ -8,24 +8,24 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String courseName;
+    private String name;
 
     private Course() {}
 
-    public Course(String courseName) {
-        this.courseName = courseName;
+    public Course(String name) {
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public String getName() {
+        return name;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
