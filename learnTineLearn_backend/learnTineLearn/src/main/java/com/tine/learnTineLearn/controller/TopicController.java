@@ -30,8 +30,8 @@ public class TopicController {
         return topicService.getTopicsByCourseId(courseId);
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<Topic> handleData(@PathVariable Long courseId, @RequestBody TopicDTO topic) {
+    @PostMapping
+    public ResponseEntity<Topic> saveNewTopic(@PathVariable Long courseId, @RequestBody TopicDTO topic) {
         customLogger.debug("Saving new topic {} for course {}", topic.getName(), courseId);
 
         Topic newTopic = new Topic(courseId, topic.getName());
@@ -39,6 +39,16 @@ public class TopicController {
         Topic savedTopic = topicService.addNewTopic(newTopic);
 
         return new ResponseEntity<>(savedTopic, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTopic(@PathVariable Long id) {
+        boolean isDeleted = topicService.deleteTopicById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();  //return 204
+        } else {
+            return ResponseEntity.notFound().build();   //return 404
+        }
     }
 
     public static class TopicDTO{

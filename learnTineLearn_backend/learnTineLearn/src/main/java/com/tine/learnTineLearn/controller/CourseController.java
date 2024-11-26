@@ -30,13 +30,23 @@ public class CourseController {
         return courseService.getCourses();
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<Course> handleData(@RequestBody Course course) {
+    @PostMapping
+    public ResponseEntity<Course> saveNewCourse(@RequestBody Course course) {
         customLogger.debug("Saving new course: " + course.getName());
 
         Course savedCourse = courseService.addNewCourse(course);
 
         return new ResponseEntity<>(savedCourse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+        boolean isDeleted = courseService.deleteCourseById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();  //return 204
+        } else {
+            return ResponseEntity.notFound().build();   //return 404
+        }
     }
 
 }

@@ -28,32 +28,32 @@ public class InfoControllerTest {
 
         @Test
         void whenSendInfoIsRequestedAndNoInfosInDb_thenCorrectStatusIsReturned() throws Exception {
-            Long courseId = 0L;
-            when(infoService.getInfosByCourseId(courseId)).thenReturn(new ArrayList<>());
+            Long topicId = 0L;
+            when(infoService.getInfosByTopicId(topicId)).thenReturn(new ArrayList<>());
 
-            mockMvc.perform(get("/api/{courseId}/", courseId))
+            mockMvc.perform(get("/api/1/topics/{topicId}", topicId))
                     .andExpect(status().isNotFound());
 
-            verify(infoService, times(1)).getInfosByCourseId(courseId);
+            verify(infoService, times(1)).getInfosByTopicId(topicId);
             verify(infoService, times(0)).getRandomInfoFromList(new ArrayList<>());
         }
 
         @Test
         void whenSendInfoIsRequestedAndInfoInDb_thenCorrectStatusAndInfoIsReturned() throws Exception {
             // Create test info
-            Long courseId = 0L;
-            Info info1 = new Info(courseId, "Info 1");
-            Info info2 = new Info(courseId, "Info 2");
+            Long topicId = 0L;
+            Info info1 = new Info(topicId, "Info 1");
+            Info info2 = new Info(topicId, "Info 2");
             ArrayList<Info> infos = new ArrayList<>(List.of(info1, info2));
 
-            when(infoService.getInfosByCourseId(courseId)).thenReturn(infos);
+            when(infoService.getInfosByTopicId(topicId)).thenReturn(infos);
             when(infoService.getRandomInfoFromList(infos)).thenReturn(info1);
 
-            mockMvc.perform(get("/api/{courseId}/", courseId))
+            mockMvc.perform(get("/api/1/topics/{topicId}", topicId))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.info").value(info1.getInfo()));
 
-            verify(infoService, times(1)).getInfosByCourseId(courseId);
+            verify(infoService, times(1)).getInfosByTopicId(topicId);
             verify(infoService, times(1)).getRandomInfoFromList(infos);
         }
 }

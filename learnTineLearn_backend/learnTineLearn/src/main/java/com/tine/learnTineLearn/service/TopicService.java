@@ -24,4 +24,12 @@ public class TopicService {
     public Topic addNewTopic(Topic topic){
         return topicRepository.save(topic);
     }
+
+    public boolean deleteTopicById(Long id) {
+        if (topicRepository.existsById(id)) {  // Check if topic exists in db
+            topicRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

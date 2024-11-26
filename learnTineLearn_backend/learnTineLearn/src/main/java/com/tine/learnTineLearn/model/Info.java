@@ -9,14 +9,14 @@ public class Info {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long courseId;
+    private Long topicId;
 
     private String info;
 
     private Info() {}
 
-    public Info(Long courseId, String info) {
-        this.courseId = courseId;
+    public Info(Long topicId, String info) {
+        this.topicId = topicId;
         this.info = info;
     }
 
@@ -24,12 +24,12 @@ public class Info {
         return id;
     }
 
-    public Long getCourseId() {
-        return courseId;
+    public Long getTopicId() {
+        return topicId;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setTopicId(Long topicId) {
+        this.topicId = topicId;
     }
 
     public String getInfo() {

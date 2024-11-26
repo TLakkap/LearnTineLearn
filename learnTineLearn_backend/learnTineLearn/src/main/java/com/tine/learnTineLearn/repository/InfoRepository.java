@@ -8,6 +8,6 @@ import java.util.ArrayList;
 
 @Repository
 public interface InfoRepository extends CrudRepository<Info, Long> {
-    ArrayList<Info> findByCourseId(Long courseId);
+    ArrayList<Info> findByTopicId(Long topicId);
 }
 

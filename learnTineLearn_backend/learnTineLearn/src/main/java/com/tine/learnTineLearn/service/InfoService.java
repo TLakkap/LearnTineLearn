@@ -32,11 +32,8 @@ public class InfoService {
         return allInfos;
     }
 
-    public ArrayList<Info> getInfosByCourseId(Long courseId) {
-        //infosInCourse = new ArrayList<>();
-        //get infos for course from db
-
-        return infoRepository.findByCourseId(courseId);
+    public ArrayList<Info> getInfosByTopicId(Long topicId) {
+        return infoRepository.findByTopicId(topicId);
     }
 
     public Info getRandomInfoFromList(ArrayList<Info> infoList) {

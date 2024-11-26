@@ -28,4 +28,11 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
+    public boolean deleteCourseById(Long id) {
+        if (courseRepository.existsById(id)) {  // Check if course exists in db
+            courseRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
