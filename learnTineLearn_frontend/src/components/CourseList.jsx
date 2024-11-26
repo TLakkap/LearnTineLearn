@@ -14,7 +14,6 @@ const CourseList = (props) => {
 
     return (
         <>
-            <h1>Aiheet</h1>
             <div>
                 {props.courses.map((course) => (
                     <Button key={course.id} label={course.name} handleClick={handleClick} 
