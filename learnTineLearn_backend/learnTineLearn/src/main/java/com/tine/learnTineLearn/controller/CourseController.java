@@ -49,4 +49,14 @@ public class CourseController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course course) {
+        if (!id.equals(course.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Course updatedCourse = courseService.updateCourse(course);
+        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
+    }
+
 }
