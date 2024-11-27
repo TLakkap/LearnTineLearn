@@ -6,7 +6,9 @@ const AddNewForm = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        props.addNew(event, new1)
+        const added = new1
+        setNew1('')
+        props.addNew(event, added)
     }
 
     return(

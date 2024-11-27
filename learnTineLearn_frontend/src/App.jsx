@@ -2,22 +2,22 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import axios from 'axios'
 import Home from './pages/Home'
-
-const url = '/api'
+import CourseDetails from './pages/CourseDetails'
+import PageNotFound from './pages/PageNotFound'
 
 function App() {
+  const [selectedCourse, setSelectedCourse] = useState()
   const [courses, setCourses] = useState([])
-  const [topics, setTopics] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState(null)
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get(`${url}/courses`).then(response => {
-        console.log(response.data)
-        setCourses(response.data)
-      })
+      console.log('Get courses from server')
+      axios
+        .get(`/api/courses`).then(response => {
+          console.log(response.data)
+          setCourses(response.data)
+        })
   }, [])
+  
 
   /*
   const handleUpdate = () => {
@@ -60,45 +60,38 @@ function App() {
       <button onClick={() => handleDelete()}>Delete</button>
       */}
 
-  const handleCourseClick = (course) => {
-    console.log('Valittu kurssi:', course)
-    setSelectedCourse(course)
-    console.log('id:', course.id)
-    axios.get(`${url}/courses/${course.id}/topics`).then(response => {
-      console.log(response.data)
-      setTopics(response.data)
-    }) 
-  }
-
-  const handleTopicClick = (topicName) => {
-    console.log('Valittu aihe:', topicName)
-  }
-
-  const addNew = (event, newName) => {
+  const handleUpdate = (event, updatedCourse) => {
     event.preventDefault()
-    console.log('Add new:', newName)
+    console.log('Update:', updatedCourse)
     axios
-      .post(`${url}/courses`, {name: newName})
+      .put(`$api/courses/${updatedCourse.id}`)
       .then(response => {
         console.log(response)
-        setCourses([...courses, response.data])
+      })
+      .catch((error) => {
+        console.log('Error:', error)
+      })
+  }
+
+  const handleDelete = (deletedCourse) => {
+    console.log("Delete course:", deletedCourse)
+    axios
+      .delete(`api/courses/${deletedCourse.id}`)
+      .then(response => {
+        console.log(response)
       })
       .catch((error) => {
         console.error('Error:', error)
       })
   }
 
-  const handleGoBack = () => {
-    setTopics([])
-    setSelectedCourse(null)
-  }
 
   return (
     <Router>
             <Routes>
-                <Route path="/" element={<Home selectedCourse={selectedCourse} courses={courses} handleCourseClick={handleCourseClick}
-                topics={topics} handleTopicClick={handleTopicClick}  addNew={addNew} handleGoBack={handleGoBack} />} />
-                {/*<Route path="/:courseName" element={<CourseDetails />} />*/}
+                <Route path="/" element={<Home courses={courses} setCourses={setCourses} setSelectedCourse={setSelectedCourse} />} />
+                <Route path="/:courseName" element={<CourseDetails courses={courses} selectedCourse={selectedCourse} />} />
+                <Route path="*" element={<PageNotFound /> } />
             </Routes>
     </Router>
   )

@@ -1,33 +1,44 @@
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 import CourseList from '../components/CourseList'
-import Button from '../components/Button'
 import AddNewForm from '../components/AddNewForm'
+import axios from 'axios'
 
 const Home = (props) => {
+    const navigate = useNavigate()
+
+    const handleNavigate = (course) => {
+        props.setSelectedCourse(course)
+        console.log("Navigate to:", course)
+        navigate(`/${course.name}`)
+    }
+
+    const addNew = (event, newName) => {
+        event.preventDefault()
+        console.log('Add new course:', newName)
+        axios
+          .post(`/api/courses`, {name: newName})
+          .then(response => {
+            console.log(response)
+            props.setCourses([...props.courses, response.data])
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+          })
+    }
+
     return (
         <div>
-            {props.selectedCourse === null ? (
-                <CourseList courses={props.courses} handleClick={props.handleCourseClick} />
-            ) : (
-                <>
-                <h2>{props.selectedCourse.name}</h2>
-                <CourseList courses={props.topics} handleClick={props.handleTopicClick} />
-                </>
-            )}
-        <AddNewForm addNew={props.addNew} />
-        <Button label='Go back' handleClick={() => props.handleGoBack()} />
+            <CourseList courses={props.courses} handleClick={handleNavigate} />
+            <AddNewForm addNew={addNew} />
         </div>
     )
 }
 
 Home.propTypes = {
-    selectedCourse: PropTypes.object,
-    courses: PropTypes.array,
-    handleCourseClick: PropTypes.func,
-    topics: PropTypes.array,
-    handleTopicClick: PropTypes.func,
-    addNew: PropTypes.func,
-    handleGoBack: PropTypes.func
+    courses: PropTypes.array.isRequired,
+    setCourses: PropTypes.func.isRequired,
+    setSelectedCourse: PropTypes.func.isRequired
 }
 
 export default Home
