@@ -4,10 +4,12 @@ import axios from 'axios'
 import Home from './pages/Home'
 import CourseDetails from './pages/CourseDetails'
 import PageNotFound from './pages/PageNotFound'
+import Login from './pages/Login'
 
 function App() {
   const [selectedCourse, setSelectedCourse] = useState()
   const [courses, setCourses] = useState([])
+  const [token, setToken] = useState()
 
   useEffect(() => {
       console.log('Get courses from server')
@@ -17,48 +19,14 @@ function App() {
           setCourses(response.data)
         })
   }, [])
-  
 
-  /*
-  const handleUpdate = () => {
-    console.log("update:", infoId, info)
-    fetch(url+infoId, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: 'updatedTextHere',
-    })
-    .then((response) => {
-      console.log(response)
-      if(response.status === 200) setMessage('Updated')
-      else setMessage('Failed to update info')    
-      //setMessage(message)
-    })
-    .catch((error) => {
-      console.error('Virhe:', error);
-    })
-  }
-
-  const handleDelete = () => {
-    console.log("delete:", infoId)
-    fetch(url+infoId, {
-      method: 'DELETE'
-    })
-    .then((response) => {
-      if(response.status === 200) console.log('Deleted')
-      else console.log('Failed to delete info')
-      })
-    .catch((error) => {
-      console.error('Virhe:', error)
-    })
-  }*/
-      
-      {/*<button onClick={() => handleClick()}>Show new info</button>
-      <h2>{info}</h2>
-      <button onClick={() => handleUpdate()}>Update</button>
-      <button onClick={() => handleDelete()}>Delete</button>
-      */}
+  useEffect(() => {
+    const loggedIn = window.localStorage.getItem('loggedInUser')
+     if (loggedIn) {
+      const token = JSON.parse(loggedIn)
+      setToken(token)
+    }
+  }, [])
 
   const handleUpdate = (event, updatedCourse) => {
     event.preventDefault()
@@ -89,8 +57,9 @@ function App() {
   return (
     <Router>
             <Routes>
-                <Route path="/" element={<Home courses={courses} setCourses={setCourses} setSelectedCourse={setSelectedCourse} />} />
+                <Route path="/" element={<Home courses={courses} setCourses={setCourses} setSelectedCourse={setSelectedCourse} token={token} />} />
                 <Route path="/:courseName" element={<CourseDetails courses={courses} selectedCourse={selectedCourse} />} />
+                <Route path='/auth/login' element={<Login />} />
                 <Route path="*" element={<PageNotFound /> } />
             </Routes>
     </Router>

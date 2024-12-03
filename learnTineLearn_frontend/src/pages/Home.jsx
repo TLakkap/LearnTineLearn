@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-import CourseList from '../components/CourseList'
+import ButtonList from '../components/ButtonList'
 import AddNewForm from '../components/AddNewForm'
 import axios from 'axios'
 
@@ -29,7 +29,8 @@ const Home = (props) => {
 
     return (
         <div>
-            <CourseList courses={props.courses} handleClick={handleNavigate} />
+            <div>{props.token && <h2>Admin</h2>}</div>
+            <ButtonList buttons={props.courses} handleClick={handleNavigate} />
             <AddNewForm addNew={addNew} />
         </div>
     )
@@ -38,7 +39,8 @@ const Home = (props) => {
 Home.propTypes = {
     courses: PropTypes.array.isRequired,
     setCourses: PropTypes.func.isRequired,
-    setSelectedCourse: PropTypes.func.isRequired
+    setSelectedCourse: PropTypes.func.isRequired,
+    token: PropTypes.string
 }
 
 export default Home

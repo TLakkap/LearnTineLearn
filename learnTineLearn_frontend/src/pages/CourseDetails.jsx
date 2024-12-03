@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
-import CourseList from '../components/CourseList'
+import ButtonList from '../components/ButtonList'
 import AddNewForm from '../components/AddNewForm'
 import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -10,15 +10,16 @@ const CourseDetails = (props) => {
     const navigate = useNavigate()
     const [topics, setTopics] = useState([])
     const [error, setError] = useState(null)
+    const [selectedCourse, setSelectedCourse] = useState(props.selectedCourse)
 
     useEffect(() => {
         console.log('effect in topics')
-        let selectedCourse = props.selectedCourse
         console.log("Selected course initially:", selectedCourse)
         if (!selectedCourse && props.courses.length >0) {
-            selectedCourse = props.courses.find(course => course.name.toLowerCase() === courseName.toLowerCase())
+            setSelectedCourse(props.courses.find(course => course.name.toLowerCase() === courseName.toLowerCase()))
             console.log("Selected course adter lookup:", selectedCourse)
             if (!selectedCourse) {
+                console.log(`Course "${courseName}" not found`)
                 setError(`Course "${courseName}" not found`);
             }
         }
@@ -34,7 +35,7 @@ const CourseDetails = (props) => {
                 console.error('Error fetching topics:', error)
             })
         }
-    }, [courseName, props.selectedCourse, props.courses])
+    }, [courseName, selectedCourse, props.courses])
 
     if (error) {
         return (
@@ -64,13 +65,17 @@ const CourseDetails = (props) => {
           })
     }
 
-    return (
-        <div>
-            <h2>{courseName}</h2>
-            <CourseList courses={topics} handleClick={handleTopicClick} />    
-            <AddNewForm addNew={addNew} />
-        </div>
-    )
+    
+    if (selectedCourse) {
+        return (
+            <div>
+                <h2>{courseName}</h2>
+                <ButtonList courses={topics} handleClick={handleTopicClick} />    
+                <AddNewForm addNew={addNew} />
+            </div>
+        )
+    }
+
 }
 
 CourseDetails.propTypes = {
