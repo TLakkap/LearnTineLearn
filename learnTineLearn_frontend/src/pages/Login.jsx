@@ -21,7 +21,7 @@ const Login = () => {
                 console.log(response)
                 //Save token to local storage
                 window.localStorage.setItem(
-                    'loggedInUser', JSON.stringify(response.data)
+                    'loggedInUser', response.data
                 )
                 handleNavigate()
             })

@@ -11,6 +11,13 @@ const CourseDetails = (props) => {
     const [topics, setTopics] = useState([])
     const [error, setError] = useState(null)
     const [selectedCourse, setSelectedCourse] = useState(props.selectedCourse)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    useEffect(() => {
+        // Check if token is in local storage
+        const localStorageToken = window.localStorage.getItem("loggedInUser")
+        setIsLoggedIn(!!localStorageToken) // Boolean
+    }, [])
 
     useEffect(() => {
         console.log('effect in topics')
@@ -47,15 +54,27 @@ const CourseDetails = (props) => {
         );
     }
 
+    const handleLogout = () => {
+        window.localStorage.removeItem("loggedInUser")
+        setIsLoggedIn(false)
+        console.log("User logged out")
+    }
+
     const handleTopicClick = (topicName) => {
         console.log('Valittu aihe:', topicName)
     }
 
     const addNew = (event, newName) => {
         event.preventDefault()
+        const token = window.localStorage.getItem("loggedInUser")
         console.log('Add new topic:', newName)
         axios
-          .post(`/api/courses/${props.selectedCourse.id}/topics`, {name: newName})
+          .post(`/api/courses/${props.selectedCourse.id}/topics`, {name: newName},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
           .then(response => {
             console.log(response)
             setTopics([...topics, response.data])
@@ -70,8 +89,15 @@ const CourseDetails = (props) => {
         return (
             <div>
                 <h2>{courseName}</h2>
-                <ButtonList courses={topics} handleClick={handleTopicClick} />    
-                <AddNewForm addNew={addNew} />
+                <ButtonList buttons={topics} handleClick={handleTopicClick} />    
+                {isLoggedIn ? (
+                <>
+                    <AddNewForm addNew={addNew} />
+                    <button onClick={handleLogout}>Logout</button>
+                </>
+                ) : (
+                    null
+                )}
             </div>
         )
     }

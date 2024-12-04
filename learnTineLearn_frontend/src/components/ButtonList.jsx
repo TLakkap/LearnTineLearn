@@ -1,22 +1,14 @@
 import PropTypes from 'prop-types'
-import Button from './Button'
 
-const ButtonList = ({ buttons, handleClick }) => {
-    
-    const handleListClick = (text) => {
-        //Find the correct object based on the button's text
-        buttons.map(b => {
-            if (b.name === text) {
-                console.log(`Clicked button ${b.name} from list`)
-                handleClick(b)
-            }
-        })
-    }
+const ButtonList = ({ buttons, handleClick, isLoggedIn, handleDelete }) => {
 
     return (
         <div>
-            {buttons.map(b => (
-                <Button key={b.id} label={b.name} handleClick={handleListClick} />
+            {buttons.length > 0 && buttons.map(b => (
+                <div key={b.id}>
+                    <button onClick={() => handleClick(b)}>{b.name}</button>
+                    {isLoggedIn && <button onClick={() => handleDelete(b)}>{`Delete ${b.name}`}</button> }
+                </div>
             ))}
         </div>
     )
@@ -28,8 +20,10 @@ buttons: PropTypes.arrayOf(
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     })
-).isRequired,
+),
 handleClick: PropTypes.func.isRequired,
+isLoggedIn: PropTypes.bool,
+handleDelete: PropTypes.func
 }
   
 export default ButtonList
