@@ -88,7 +88,7 @@ const CourseDetails = (props) => {
     if (selectedCourse) {
         return (
             <div>
-                <h2>{courseName}</h2>
+                <h1 style={{ margin: 2, color: '#990055' }}>{courseName}</h1>
                 <ButtonList buttons={topics} handleClick={handleTopicClick} />    
                 {isLoggedIn ? (
                 <>
