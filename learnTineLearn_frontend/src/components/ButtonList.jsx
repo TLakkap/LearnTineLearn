@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types'
 
-const ButtonList = ({ buttons, handleClick, isLoggedIn, handleDelete }) => {
+const ButtonList = ({ buttons, handleClick, isLoggedIn, handleDelete, selected }) => {
     return (
         <>
             <div style={{ display: 'flex' }}>
                 {buttons.length > 0 && buttons.map(b => (
                     <div style={{ display: 'inline-block' , margin: 5}} key={b.id}>
                         <button onClick={() => handleClick(b)} style={{
-                                backgroundColor: '#e0f7e0', border: 'none',
+                                backgroundColor: selected?.id === b.id ? '#e0f7e0' : 'transparent',
+                                border: 'none',
                                 borderBottom: '2px solid green',
                                 padding: '10px 10px', cursor: 'pointer',
                                 transition: 'background-color 0.3s'
@@ -22,19 +23,23 @@ const ButtonList = ({ buttons, handleClick, isLoggedIn, handleDelete }) => {
                 ))}
             </div>
         </>
-    );
+    )
 }
 
 ButtonList.propTypes = {
-buttons: PropTypes.arrayOf(
-    PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
+    buttons: PropTypes.arrayOf(
+        PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        })
+    ),
+    handleClick: PropTypes.func.isRequired,
+    isLoggedIn: PropTypes.bool,
+    handleDelete: PropTypes.func,
+    selected: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string
     })
-),
-handleClick: PropTypes.func.isRequired,
-isLoggedIn: PropTypes.bool,
-handleDelete: PropTypes.func
 }
   
 export default ButtonList
