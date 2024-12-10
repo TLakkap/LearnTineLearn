@@ -7,11 +7,13 @@ import PageNotFound from './pages/PageNotFound'
 import Login from './pages/Login'
 import ButtonList from "./components/ButtonList"
 import AddNewForm from "./components/AddNewForm"
+import InfoPage from './pages/InfoPage'
 
 function App() {
   const navigate = useNavigate()
   const [courses, setCourses] = useState([])
   const [topics, setTopics] = useState([])
+  const [info, setInfo] = useState('')
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -19,78 +21,93 @@ function App() {
   const token = window.localStorage.getItem("loggedInUser")
 
   useEffect(() => {
-      console.log('Get courses from server')
-      axios
-        .get(`/api/courses`).then(response => {
-          console.log(response.data)
-          setCourses(response.data)
-        })
+    console.log('Get courses from server')
+    axios
+      .get(`/api/courses`).then(response => {
+        console.log(response.data)
+        setCourses(response.data)
+      })
   }, [])
 
   useEffect(() => {
-      // Check if token is in local storage
-      const localStorageToken = window.localStorage.getItem("loggedInUser")
-      setIsLoggedIn(!!localStorageToken) // Boolean
+    // Check if token is in local storage
+    const localStorageToken = window.localStorage.getItem("loggedInUser")
+    setIsLoggedIn(!!localStorageToken) // Boolean
   }, [token])
 
   const handleCourseClick = (course) => {
-      setSelectedCourse(course)
-      setSelectedTopic(null)
-      handleGetTopics(course)
-      navigate(`/${course.name}`)
+    setSelectedCourse(course)
+    setSelectedTopic(null)
+    handleGetTopics(course)
+    navigate(`/${course.name}`)
+  }
+
+  const handleTopicClick = (topic) => {
+    setSelectedTopic(topic)
+    handleGetInfo(topic)
+    console.log("Navigating to get info")
+    navigate(`/${selectedCourse.name}/${topic.name}`)
   }
 
   const handleGetTopics = (course) => {
     axios
-              .get(`/api/courses/${course.id}/topics`)
-              .then(response => {
-                console.log('response topics in App.jsx:', response)
-                setTopics(response.data)
-            })
-              .catch(error => {
-                console.error('Error fetching topics:', error)
-            })
+      .get(`/api/courses/${course.id}/topics`)
+      .then(response => {
+        console.log('response topics in App.jsx:', response)
+        setTopics(response.data)
+      })
+      .catch(error => {
+        console.error('Error fetching topics:', error)
+      })
+  }
+
+  const handleGetInfo = (topic) => {
+    axios
+      .get(`/api/courses/${selectedCourse.id}/topics/${topic.id}`)
+      .then(response => {
+        console.log('Response info from server: ', response)
+        setInfo(response.data)
+      })
+      .catch(e => {
+        console.error('Error fetching info:', e)
+      })
   }
 
   const handleLogout = () => {
-      window.localStorage.removeItem("loggedInUser")
-      setIsLoggedIn(false)
-      console.log("User logged out")
+    window.localStorage.removeItem("loggedInUser")
+    setIsLoggedIn(false)
+    console.log("User logged out")
   }
 
   const addNew = async (event, newName) => {
-      event.preventDefault()
+    event.preventDefault()
 
-      try {
-          const response = await axios.post(
-              '/api/courses',
-              { name: newName },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`
-                }
-              }
-            )
-          console.log("Course added:", response.data)
-          setCourses([...courses, response.data])
-      } catch (error) {
-          console.error("Error adding course:", error)
-          setErrorMessage(error.response?.data?.message || "An error occurred")
-      }
+    try {
+      const response = await axios.post(
+        '/api/courses',
+        { name: newName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      console.log("Course added:", response.data)
+      setCourses([...courses, response.data])
+    } catch (error) {
+        console.error("Error adding course:", error)
+        setErrorMessage(error.response?.data?.message || "An error occurred")
+    }
   }
 
   const handleDelete = (deletedCourse) => {
     console.log("Deleting course:", deletedCourse)
     axios
       .delete(`/api/courses/${deletedCourse.id}`, {
-          headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-          console.log("Course deleted successfully:", response)
-          // update course list
-          setCourses(prevCourses =>
-              prevCourses.filter(course => course.id !== deletedCourse.id)
-          )
+        console.log("Course deleted successfully:", response)
+        // update course list
+        setCourses(prevCourses =>
+        prevCourses.filter(course => course.id !== deletedCourse.id)
+      )
       })
       .catch(error => {
           console.error("Error while deleting course:", error)
@@ -146,7 +163,9 @@ function App() {
           setTopics={setTopics}
           isLoggedIn={isLoggedIn}
           handleLogout={handleLogout}
-          selectedCourse={selectedCourse} />} />
+          selectedCourse={selectedCourse}
+          handleTopicClick={handleTopicClick} />} />
+        <Route path="/:courseName/:topicName" element={<InfoPage info={info} handleGetInfo={handleGetInfo} selectedTopic={selectedTopic} selectedCourse={selectedCourse} isLoggedIn={isLoggedIn} />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="*" element={<PageNotFound /> } />
     </Routes>

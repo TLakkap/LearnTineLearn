@@ -4,8 +4,9 @@ import AddNewForm from '../components/AddNewForm'
 import axios from 'axios'
 
 const CourseDetails = (props) => {
-    const handleTopicClick = (topicName) => {
-        console.log('Valittu aihe:', topicName)
+    const handleTopicClick = (topic) => {
+        console.log('Valittu aihe:', topic.name)
+        props.handleTopicClick(topic)
     }
 
     const addNew = (event, newName) => {
@@ -50,6 +51,7 @@ CourseDetails.propTypes = {
     setTopics: PropTypes.func,
     isLoggedIn: PropTypes.bool,
     handleLogout: PropTypes.func,
+    handleTopicClick: PropTypes.func,
     selectedCourse: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string

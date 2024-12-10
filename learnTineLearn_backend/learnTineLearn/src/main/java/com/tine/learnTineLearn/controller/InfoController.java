@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/{courseId}/topics/{topicId}")
+@RequestMapping("/api/courses/{courseId}/topics/{topicId}")
 public class InfoController {
 
     private final CustomLogger customLogger;
@@ -42,7 +42,12 @@ public class InfoController {
     }
 
     @PostMapping
-    public ResponseEntity<Info> handleData(@RequestBody Info info) {
+    public ResponseEntity<Info> handleData(@PathVariable Long topicId, @RequestBody Info info) {
+        // Make sure path topic id and info topic id are the same
+        if (!topicId.equals(info.getTopicId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
         customLogger.info("Received new info: " + info.getInfo());
 
         Info savedInfo = infoService.addNewInfo(info);
