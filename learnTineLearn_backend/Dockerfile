@@ -19,8 +19,10 @@ VOLUME /tmp
 # Copy the JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Environment variable to specify the port
+# Define the environment variable PORT with default value 8080
 ENV PORT=8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Ensure the application reads the PORT environment variable
+CMD ["sh", "-c", "java -Dserver.port=${PORT} -jar /app.jar"]
+
 EXPOSE 8080
