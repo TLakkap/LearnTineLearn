@@ -18,5 +18,9 @@ VOLUME /tmp
 
 # Copy the JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Environment variable to specify the port
+ENV PORT=8080
+
 ENTRYPOINT ["java","-jar","/app.jar"]
 EXPOSE 8080
