@@ -8,26 +8,42 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Configuration class responsible for initializing essential user data in the system.
+ * Ensures that an 'admin' user exists with a securely encoded password.
+ */
 @Configuration
 public class UserDataInit {
 
-        @Autowired
-        private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        @Value("${ADMIN_PWD}")
-        private String password;
+    // Retrieves the admin password from environment variables
+    @Value("${ADMIN_PWD}")
+    private String password;
 
-        @PostConstruct
-        public void init() {
-            if (userRepository.findByUsername("admin").isEmpty()) {
-                User admin = new User();
-                admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode(password));
-                userRepository.save(admin);
-            }
+    /**
+     * init() method is executed after the bean's properties have been set.
+     * This method checks if the 'admin' user exists in the database. If not,
+     * it creates and saves an 'admin' user with a securely encoded password.
+     */
+    @PostConstruct
+    public void init() {
+        // Check if username "admin" exists in the database
+        if (userRepository.findByUsername("admin").isEmpty()) {
+            // Create User object, set username "admin"
+            User admin = new User();
+            admin.setUsername("admin");
+
+            // Encode password and set it to "admin" User object
+            admin.setPassword(passwordEncoder.encode(password));
+
+            // Save the created "admin" user to the repository
+            userRepository.save(admin);
         }
+    }
 
 }
