@@ -1,29 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useNavigate } from "react-router-dom"
-import axios from 'axios'
+import { getCourses, getTopics, getInfo, deleteCourse } from './api'
 import Home from './pages/Home'
 import CourseDetails from './pages/CourseDetails'
 import PageNotFound from './pages/PageNotFound'
 import Login from './pages/Login'
-import ButtonList from "./components/ButtonList"
-import AddNewForm from "./components/AddNewForm"
 import InfoPage from './pages/InfoPage'
+import Header from './components/Header'
 
 function App() {
   const navigate = useNavigate()
   const [courses, setCourses] = useState([])
   const [topics, setTopics] = useState([])
-  const [info, setInfo] = useState('')
+  const [info, setInfo] = useState({})
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
   const token = window.localStorage.getItem("loggedInUser")
 
   useEffect(() => {
     console.log('Get courses from server')
-    axios
-      .get(`/api/courses`).then(response => {
+    getCourses()
+      .then(response => {
         console.log(response.data)
         setCourses(response.data)
       })
@@ -50,8 +48,7 @@ function App() {
   }
 
   const handleGetTopics = (course) => {
-    axios
-      .get(`/api/courses/${course.id}/topics`)
+    getTopics(course.id)
       .then(response => {
         console.log('response topics in App.jsx:', response)
         setTopics(response.data)
@@ -62,8 +59,7 @@ function App() {
   }
 
   const handleGetInfo = (topic) => {
-    axios
-      .get(`/api/courses/${selectedCourse.id}/topics/${topic.id}`)
+    getInfo(selectedCourse.id, topic.id)
       .then(response => {
         console.log('Response info from server: ', response)
         setInfo(response.data)
@@ -79,29 +75,9 @@ function App() {
     console.log("User logged out")
   }
 
-  const addNew = async (event, newName) => {
-    event.preventDefault()
-
-    try {
-      const response = await axios.post(
-        '/api/courses',
-        { name: newName },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      console.log("Course added:", response.data)
-      setCourses([...courses, response.data])
-    } catch (error) {
-        console.error("Error adding course:", error)
-        setErrorMessage(error.response?.data?.message || "An error occurred")
-    }
-  }
-
   const handleDelete = (deletedCourse) => {
     console.log("Deleting course:", deletedCourse)
-    axios
-      .delete(`/api/courses/${deletedCourse.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+    deleteCourse(deletedCourse.id)
       .then(response => {
         console.log("Course deleted successfully:", response)
         // update course list
@@ -129,35 +105,13 @@ function App() {
 
   return (
     <>
-    <div style={{ borderTop: '2px solid black', borderBottom: '2px solid black' }}>
-      <ButtonList 
-        buttons={courses}
-        handleClick={handleCourseClick}
-        isLoggedIn={isLoggedIn}
-        handleDelete={handleDelete}
-        selected={selectedCourse}
-      />
-      {selectedCourse && (
-        <div>
-          <ButtonList 
-            buttons={selectedCourse.topics || []} 
-            handleClick={(topic) => setSelectedTopic(topic)} 
-            selected={selectedTopic}
-          />
-        </div>
-      )}
-      {isLoggedIn ? (
-        <>
-            <AddNewForm addNew={addNew} />
-            <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        null
-      )}
-      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
-    </div>
-    <Routes>
-        <Route path="/" element={<Home />} />
+      <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} courses={courses} handleCourseClick={handleCourseClick}
+        handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
+      <Routes>
+        <Route path="/" element={<Home 
+          courses={courses} 
+          setCourses={setCourses} 
+          isLoggedIn={isLoggedIn} />} />
         <Route path="/:courseName" element={<CourseDetails
           topics={topics}
           setTopics={setTopics}
@@ -168,7 +122,7 @@ function App() {
         <Route path="/:courseName/:topicName" element={<InfoPage info={info} handleGetInfo={handleGetInfo} selectedTopic={selectedTopic} selectedCourse={selectedCourse} isLoggedIn={isLoggedIn} />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="*" element={<PageNotFound /> } />
-    </Routes>
+      </Routes>
     </>
   )
 }
