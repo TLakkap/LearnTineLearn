@@ -29,7 +29,7 @@ public class InfoController {
         ArrayList<Info> infos = infoService.getInfosByTopicId(topicId);
 
         if (infos.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         for (Info info : infos) {
