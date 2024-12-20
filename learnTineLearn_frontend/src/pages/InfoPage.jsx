@@ -19,6 +19,7 @@ const InfoPage = ({ info, handleGetInfo, selectedTopic, selectedCourse, isLogged
 
   return(
     <>
+      <h2>{selectedTopic.name}</h2>
       <h3>{info.info}</h3>
       <button onClick={() => handleGetInfo(selectedTopic)}>Next</button>
       {isLoggedIn ? ( <AddNewForm addNew={addNew} /> ) : ( null )}
