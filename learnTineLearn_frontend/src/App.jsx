@@ -36,7 +36,7 @@ function App() {
   const handleCourseClick = (course) => {
     setSelectedCourse(course)
     setSelectedTopic(null)
-    handleGetTopics(course)
+    //handleGetTopics(course)
     navigate(`/${course.name}`)
   }
 
@@ -47,7 +47,20 @@ function App() {
     navigate(`/${selectedCourse.name}/${topic.name}`)
   }
 
-  const handleGetTopics = (course) => {
+  const handleGetTopics = async (course) => {
+    try {
+        const response = await getTopics(course.id)
+        console.log('response topics in App.jsx:', response);
+        setTopics(response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching topics:', error)
+        return []
+    }
+};
+
+
+  /*const handleGetTopics = (course) => {
     getTopics(course.id)
       .then(response => {
         console.log('response topics in App.jsx:', response)
@@ -56,7 +69,7 @@ function App() {
       .catch(error => {
         console.error('Error fetching topics:', error)
       })
-  }
+  }*/
 
   const handleGetInfo = (topic) => {
     getInfo(selectedCourse.id, topic.id)
@@ -104,9 +117,9 @@ function App() {
   }*/
 
   return (
-    <>
+    <div style={{ backgroundColor: '#f1faee', minHeight: '100vh' }}>
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} courses={courses} handleCourseClick={handleCourseClick}
-        handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
+        handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} handleGetTopics={handleGetTopics} handleTopicClick={handleTopicClick} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
       <Routes>
         <Route path="/" element={<Home 
           courses={courses} 
@@ -123,7 +136,7 @@ function App() {
         <Route path="/auth/login" element={<Login />} />
         <Route path="*" element={<PageNotFound /> } />
       </Routes>
-    </>
+    </div>
   )
 }
 

@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types'
 import { addNewTopic } from '../api'
-import ButtonList from '../components/ButtonList'
+//import ButtonList from '../components/ButtonList'
 import AddNewForm from '../components/AddNewForm'
 
 const CourseDetails = (props) => {
-  const handleTopicClick = (topic) => {
+  /*const handleTopicClick = (topic) => {
     console.log('Valittu aihe:', topic.name)
     props.handleTopicClick(topic)
-  }
+  }*/
 
   const addNew = (event, newName) => {
     event.preventDefault()
@@ -25,7 +25,7 @@ const CourseDetails = (props) => {
 
   return (
     <div>
-      <ButtonList buttons={props.topics} handleClick={handleTopicClick} />    
+      {/*<ButtonList buttons={props.topics} handleClick={handleTopicClick} />*/} 
       {props.isLoggedIn ? ( <AddNewForm addNew={addNew} /> ) : ( null )}
     </div>
   )

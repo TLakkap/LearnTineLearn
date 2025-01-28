@@ -7,9 +7,10 @@ const ButtonList = ({ buttons, handleClick, isLoggedIn, handleDelete, selected }
                 {buttons.length > 0 && buttons.map(b => (
                     <div style={{ display: 'inline-block' , margin: 5}} key={b.id}>
                         <button onClick={() => handleClick(b)} style={{
-                                backgroundColor: selected?.id === b.id ? '#e0f7e0' : 'transparent',
+                                backgroundColor: selected?.id === b.id ? '#457b9d' : 'transparent',
+                                color: selected?.id === b.id ? 'white' : 'black',
                                 border: 'none',
-                                borderBottom: '2px solid green',
+                                borderBottom: '2px solid #1d3557',
                                 padding: '10px 10px', cursor: 'pointer',
                                 transition: 'background-color 0.3s'
                             }}>{b.name}</button>
