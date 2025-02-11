@@ -29,11 +29,7 @@ public class InfoController {
         ArrayList<Info> infos = infoService.getInfosByTopicId(topicId);
 
         if (infos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        for (Info info : infos) {
-            customLogger.debug(info.getInfo());
+            return ResponseEntity.ok(Info.emptyInfo(topicId));
         }
 
         Info info = infoService.getRandomInfoFromList(infos);

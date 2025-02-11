@@ -20,6 +20,13 @@ public class Info {
         this.info = info;
     }
 
+    public static Info emptyInfo(Long topicId) {
+        Info emptyInfo = new Info();
+        emptyInfo.topicId = topicId;
+        emptyInfo.info = "No info available";
+        return emptyInfo;
+    }
+
     public Long getId() {
         return id;
     }
