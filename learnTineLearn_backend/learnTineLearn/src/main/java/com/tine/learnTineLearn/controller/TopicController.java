@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses/{courseId}/topics")
@@ -24,7 +24,7 @@ public class TopicController {
     }
 
     @GetMapping
-    public ArrayList<Topic> getAllTopicsForCourse(@PathVariable Long courseId) {
+    public List<Topic> getAllTopicsForCourse(@PathVariable Long courseId) {
         customLogger.debug("Get all topics for course:{}", courseId);
 
         return topicService.getTopicsByCourseId(courseId);

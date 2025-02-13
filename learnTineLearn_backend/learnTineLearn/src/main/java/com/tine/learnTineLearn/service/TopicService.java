@@ -5,7 +5,7 @@ import com.tine.learnTineLearn.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TopicService {
@@ -16,9 +16,9 @@ public class TopicService {
         this.topicRepository = topicRepository;
     }
 
-    public ArrayList<Topic> getTopicsByCourseId(Long courseId){
-        //Get topics from db
-        return new ArrayList<>(topicRepository.findByCourseId(courseId));
+    public List<Topic> getTopicsByCourseId(Long courseId) {
+        //Get topics from db, in alphabetical order
+        return topicRepository.findByCourseIdOrderByNameAsc(courseId);
     }
 
     public Topic addNewTopic(Topic topic){

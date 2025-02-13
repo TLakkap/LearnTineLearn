@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class CourseServiceTest {
 
         when(courseRepository.findAll()).thenReturn(mockCourses);
 
-        ArrayList<Course> courses = courseService.getCourses();
+        List<Course> courses = courseService.getCourses();
 
         assertEquals(2, courses.size());
         assertEquals("Math 101", courses.get(0).getName());
