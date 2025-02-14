@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useNavigate } from "react-router-dom"
 import { getCourses, getTopics, getInfo, deleteCourse } from './api'
+import { ToastContainer } from "react-toastify"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import Home from './pages/Home'
 import CourseDetails from './pages/CourseDetails'
 import PageNotFound from './pages/PageNotFound'
@@ -16,70 +19,61 @@ function App() {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const token = window.localStorage.getItem("loggedInUser")
+  //const token = window.localStorage.getItem("loggedInUser")
 
   useEffect(() => {
-    console.log('Get courses from server')
+    console.log('Fetching courses from server...')
     getCourses()
       .then(response => {
-        console.log(response.data)
         setCourses(response.data)
       })
+      .catch(
+        toast.error("Error while fetching courses from server. Please, try again.")
+      )
   }, [])
 
   useEffect(() => {
     // Check if token is in local storage
-    const localStorageToken = window.localStorage.getItem("loggedInUser")
-    setIsLoggedIn(!!localStorageToken) // Boolean
-  }, [token])
+    setIsLoggedIn(!!window.localStorage.getItem("loggedInUser")) // Boolean
+  }, [])
 
   const handleCourseClick = (course) => {
     setSelectedCourse(course)
     setSelectedTopic(null)
-    //handleGetTopics(course)
     navigate(`/${course.name}`)
   }
 
   const handleTopicClick = (topic) => {
+    // return if course is not selected
+    if (!selectedCourse) return
+    // if course selected continue to topic selection
     setSelectedTopic(topic)
     handleGetInfo(topic)
-    console.log("Navigating to get info")
     navigate(`/${selectedCourse.name}/${topic.name}`)
   }
 
   const handleGetTopics = async (course) => {
+    // return empty array if course is not provided
+    if (!course) return []
     try {
         const response = await getTopics(course.id)
-        console.log('response topics in App.jsx:', response);
         setTopics(response.data)
         return response.data
     } catch (error) {
         console.error('Error fetching topics:', error)
         return []
     }
-};
+  }
 
-
-  /*const handleGetTopics = (course) => {
-    getTopics(course.id)
-      .then(response => {
-        console.log('response topics in App.jsx:', response)
-        setTopics(response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching topics:', error)
-      })
-  }*/
-
-  const handleGetInfo = (topic) => {
-    getInfo(selectedCourse.id, topic.id)
-      .then(response => {
-        console.log('Response info from server: ', response)
-        setInfo(response.data)
-      })
-      .catch(e => {
-        console.error('Error fetching info:', e)
-      })
+  const handleGetInfo = async (topic) => {
+    // return if course is not selected or topic is not provided
+    if (!selectedCourse || !topic) return
+    try {
+      const response = await getInfo(selectedCourse.id, topic.id)
+      setInfo(response.data)
+    } catch (error) {
+        console.error('Error fetching info:', error)
+    }
   }
 
   const handleLogout = () => {
@@ -88,19 +82,17 @@ function App() {
     console.log("User logged out")
   }
 
-  const handleDelete = (deletedCourse) => {
-    console.log("Deleting course:", deletedCourse)
-    deleteCourse(deletedCourse.id)
-      .then(response => {
-        console.log("Course deleted successfully:", response)
-        // update course list
-        setCourses(prevCourses =>
-        prevCourses.filter(course => course.id !== deletedCourse.id)
-      )
-      })
-      .catch(error => {
-          console.error("Error while deleting course:", error)
-      })
+  const handleDelete = async (deletedCourse) => {
+    // return if deletedCourse not provided
+    if (!deletedCourse) return
+    try {
+      await deleteCourse(deletedCourse.id)
+      setCourses(prevCourses =>
+        prevCourses.filter(course => course.id !== deletedCourse.id))
+      console.log("Course deleted successfully")
+    } catch (error) {
+      console.error("Error while deleting course:", error)
+    }
   }
 
   /*const handleUpdate = (event, updatedCourse) => {
@@ -118,6 +110,7 @@ function App() {
 
   return (
     <div style={{ backgroundColor: '#f4f4f9', minHeight: '100vh', fontFamily: 'Arial' }}>
+      <ToastContainer />
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} courses={courses} handleCourseClick={handleCourseClick}
         handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} handleGetTopics={handleGetTopics} handleTopicClick={handleTopicClick} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
       <Routes>
