@@ -117,7 +117,7 @@ function App() {
   }*/
 
   return (
-    <div style={{ backgroundColor: '#f1faee', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#f4f4f9', minHeight: '100vh', fontFamily: 'Arial' }}>
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} courses={courses} handleCourseClick={handleCourseClick}
         handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} handleGetTopics={handleGetTopics} handleTopicClick={handleTopicClick} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
       <Routes>

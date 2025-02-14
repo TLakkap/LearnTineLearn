@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ButtonList from './ButtonList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 const Header = (props) => {
     const [topicList, setTopicList] = useState([]);
@@ -23,6 +25,7 @@ const Header = (props) => {
 
     return (
         <>
+            <h1 style={{backgroundColor: '#023e8a', color: '#95d5b2', fontFamily: 'Georgia', margin: 0, padding: 10 }}><FontAwesomeIcon icon={faBook} className="logo-icon" /> NoteBlogTML</h1>
             {props.isLoggedIn ? (<button onClick={props.handleLogout}>Logout</button>) : (null)}
             <div style={{ borderTop: '2px solid black', borderBottom: '2px solid black' }}>
                 <ButtonList 
