@@ -19,7 +19,6 @@ function App() {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  //const token = window.localStorage.getItem("loggedInUser")
 
   useEffect(() => {
     console.log('Fetching courses from server...')
@@ -111,8 +110,18 @@ function App() {
   return (
     <div style={{ backgroundColor: '#f4f4f9', minHeight: '100vh', fontFamily: 'Arial' }}>
       <ToastContainer />
-      <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} courses={courses} handleCourseClick={handleCourseClick}
-        handleDelete={handleDelete} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} handleGetTopics={handleGetTopics} handleTopicClick={handleTopicClick} setSelectedTopic={setSelectedTopic} selectedTopic={selectedTopic} />
+      <Header 
+        isLoggedIn={isLoggedIn} 
+        handleLogout={handleLogout} 
+        courses={courses} 
+        handleCourseClick={handleCourseClick}
+        handleDelete={handleDelete} 
+        selectedCourse={selectedCourse} 
+        setSelectedCourse={setSelectedCourse} 
+        handleGetTopics={handleGetTopics} 
+        handleTopicClick={handleTopicClick} 
+        setSelectedTopic={setSelectedTopic} 
+        selectedTopic={selectedTopic} />
       <Routes>
         <Route path="/" element={<Home 
           courses={courses} 
@@ -125,7 +134,12 @@ function App() {
           handleLogout={handleLogout}
           selectedCourse={selectedCourse}
           handleTopicClick={handleTopicClick} />} />
-        <Route path="/:courseName/:topicName" element={<InfoPage info={info} handleGetInfo={handleGetInfo} selectedTopic={selectedTopic} selectedCourse={selectedCourse} isLoggedIn={isLoggedIn} />} />
+        <Route path="/:courseName/:topicName" element={<InfoPage 
+          info={info} 
+          handleGetInfo={handleGetInfo} 
+          selectedTopic={selectedTopic} 
+          selectedCourse={selectedCourse} 
+          isLoggedIn={isLoggedIn} />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="*" element={<PageNotFound /> } />
       </Routes>
